@@ -1,4 +1,5 @@
 ﻿using Mastery.Engine.Input;
+using Mastery.Engine.Objects;
 using Mastery.Engine.States;
 using Mastery.Objects;
 using Microsoft.Xna.Framework;
@@ -9,24 +10,37 @@ using System.Collections.Generic;
 
 namespace Mastery.States.Gameplay
 {
-    public class GameplayState : BaseGameStateEvent
+    public class GameplayState : BaseGameState
     {
         private const string BackgroundTexture = "Barren";
         private const string PlayerFighter = "fighter";
         private const string BulletTexture = "bullet";
+        private const string ExhaustTexture = "Cloud";
+        private const string MissileTexture = "Missile";
 
-        private PlayerSprite _playerSprite;
+        private Texture2D _missileTexture;
+        private Texture2D _exhaustTexture;
         private Texture2D _bulletTexture;
-        private bool _isShooting;
-        private TimeSpan _lastShotAt;
+        
+        private PlayerSprite _playerSprite;
+        
+        private bool _isShootingBullets;
+        private bool _isShootingMissile;
+        private TimeSpan _lastBulletShotAt;
+        private TimeSpan _lastMissileShotAt;
 
         private List<BulletSprite> _bulletList;
+        private List<MissileSprite> _missileList;
 
         public override void LoadContent()
         {
-            _playerSprite = new PlayerSprite(LoadTexture(PlayerFighter));
+            _missileTexture = LoadTexture(MissileTexture);
+            _exhaustTexture = LoadTexture(ExhaustTexture);
             _bulletTexture = LoadTexture(BulletTexture);
+
+            _playerSprite = new PlayerSprite(LoadTexture(PlayerFighter));
             _bulletList = new List<BulletSprite>();
+            _missileList = new List<MissileSprite>();
 
             AddGameObject(new TerrainBackground(LoadTexture(BackgroundTexture)));
             AddGameObject(_playerSprite);
@@ -36,7 +50,9 @@ namespace Mastery.States.Gameplay
             _playerSprite.Position = new Vector2(playerXPos, playerYPos);
 
             var bulletSound = LoadSound("bulletSound");
-            _soundManager.RegisterSound(new GameplayEvents.PlayerShoots(), bulletSound);
+            var missileSound = LoadSound("missileSound");
+            _soundManager.RegisterSound(new GameplayEvents.PlayerShootsBullets(), bulletSound);
+            _soundManager.RegisterSound(new GameplayEvents.PlayerShootsMissile(), missileSound, 0.4f, -0.2f, 0.0f);
 
             var track1 = LoadSound("FutureAmbient_1").CreateInstance();
             var track2 = LoadSound("FutureAmbient_2").CreateInstance();
@@ -78,38 +94,63 @@ namespace Mastery.States.Gameplay
                 bullet.MoveUp();
             }
 
-            if (gameTime.TotalGameTime - _lastShotAt > TimeSpan.FromSeconds(0.2))
+            foreach (var missile in _missileList)
             {
-                _isShooting = false;
+                missile.Update(gameTime);
             }
 
-            var newBulletList = new List<BulletSprite>();
-            foreach (var bullet in _bulletList)
+            if (gameTime.TotalGameTime - _lastBulletShotAt > TimeSpan.FromSeconds(0.2))
             {
-                var bulletStillOnScreen = bullet.Position.Y > -30;
+                _isShootingBullets = false;
+            }
 
-                if (bulletStillOnScreen)
+            if (gameTime.TotalGameTime - _lastMissileShotAt > TimeSpan.FromSeconds(1.0))
+            {
+                _isShootingMissile = false;
+            }
+
+            _bulletList = CleanObjects(_bulletList);
+            _missileList = CleanObjects(_missileList);
+        }
+
+        private List<T> CleanObjects<T>(List<T> objectList) where T : BaseGameObject
+        {
+            List<T> listOfItemsToKeep = new List<T>();
+            foreach (T item in objectList)
+            {
+                var stillOnScreen = item.Position.Y > -50;
+
+                if (stillOnScreen)
                 {
-                    newBulletList.Add(bullet);
+                    listOfItemsToKeep.Add(item);
                 }
                 else
                 {
-                    RemoveGameObject(bullet);
+                    RemoveGameObject(item);
                 }
             }
 
-            _bulletList = newBulletList;
+            return listOfItemsToKeep;
         }
 
         private void Shoot(GameTime gameTime)
         {
-            if (!_isShooting)
+            if (!_isShootingBullets)
             {
                 CreateBullets();
-                _isShooting = true;
-                _lastShotAt = gameTime.TotalGameTime;
+                _isShootingBullets = true;
+                _lastBulletShotAt = gameTime.TotalGameTime;
 
-                NotifyEvent(new GameplayEvents.PlayerShoots());
+                NotifyEvent(new GameplayEvents.PlayerShootsBullets());
+            }
+
+            if (!_isShootingMissile)
+            {
+                CreateMissile();
+                _isShootingMissile = true;
+                _lastMissileShotAt = gameTime.TotalGameTime;
+
+                NotifyEvent(new GameplayEvents.PlayerShootsMissile());
             }
         }
 
@@ -130,6 +171,15 @@ namespace Mastery.States.Gameplay
 
             AddGameObject(bulletSpriteLeft);
             AddGameObject(bulletSpriteRight);
+        }
+
+        private void CreateMissile()
+        {
+            var missileSprite = new MissileSprite(_missileTexture, _exhaustTexture);
+            missileSprite.Position = new Vector2(_playerSprite.Position.X + 33, _playerSprite.Position.Y - 25);
+
+            _missileList.Add(missileSprite);
+            AddGameObject(missileSprite);
         }
 
         private void KeepPlayerInBounds()

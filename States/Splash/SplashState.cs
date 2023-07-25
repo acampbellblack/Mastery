@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework;
 
 namespace Mastery.States.Splash
 {
-    public class SplashState : BaseGameStateEvent
+    public class SplashState : BaseGameState
     {
         public override void LoadContent()
         {

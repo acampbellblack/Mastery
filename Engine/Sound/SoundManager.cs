@@ -9,7 +9,7 @@ namespace Mastery.Engine.Sound
     {
         private int _soundtrackIndex = -1;
         private List<SoundEffectInstance> _soundtracks = new List<SoundEffectInstance>();
-        private Dictionary<Type, SoundEffect> _soundBank = new Dictionary<Type, SoundEffect>();
+        private Dictionary<Type, SoundBankItem> _soundBank = new Dictionary<Type, SoundBankItem>();
 
         public void SetSoundtrack(List<SoundEffectInstance> tracks)
         {
@@ -21,7 +21,7 @@ namespace Mastery.Engine.Sound
         {
             if (_soundBank.TryGetValue(gameEvent.GetType(), out var sound))
             {
-                sound.Play();
+                sound.Sound.Play(sound.Attributes.Volume, sound.Attributes.Pitch, sound.Attributes.Pan);
             }
         }
 
@@ -51,7 +51,12 @@ namespace Mastery.Engine.Sound
 
         public void RegisterSound(BaseGameStateEvents gameEvent, SoundEffect sound)
         {
-            _soundBank.Add(gameEvent.GetType(), sound);
+            RegisterSound(gameEvent, sound, 1.0f, 0.0f, 0.0f);
+        }
+
+        public void RegisterSound(BaseGameStateEvents gameEvent, SoundEffect sound, float volume, float pitch, float pan)
+        {
+            _soundBank.Add(gameEvent.GetType(), new SoundBankItem(sound, new SoundAttributes(volume, pitch, pan)));
         }
     }
 }

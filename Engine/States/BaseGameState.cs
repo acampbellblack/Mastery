@@ -11,7 +11,7 @@ using System.Linq;
 
 namespace Mastery.Engine.States
 {
-    public abstract class BaseGameStateEvent
+    public abstract class BaseGameState
     {
         private const string FallbackTexture = "Empty";
         private const string FallbackSong = "EmptySound";
@@ -38,7 +38,7 @@ namespace Mastery.Engine.States
         public abstract void HandleInput(GameTime gameTime);
         public abstract void UpdateGameState(GameTime gameTime);
 
-        public event EventHandler<BaseGameStateEvent> OnStateSwitched;
+        public event EventHandler<BaseGameState> OnStateSwitched;
         public event EventHandler<BaseGameStateEvents> OnEventNotification;
         protected abstract void SetInputManager();
 
@@ -75,7 +75,7 @@ namespace Mastery.Engine.States
             _soundManager.OnNotify(gameEvent);
         }
 
-        protected void SwitchState(BaseGameStateEvent state)
+        protected void SwitchState(BaseGameState state)
         {
             OnStateSwitched?.Invoke(this, state);
         }

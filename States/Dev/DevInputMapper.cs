@@ -6,7 +6,7 @@ namespace Mastery.States.Dev
 {
     public class DevInputMapper : BaseInputMapper
     {
-        public override IEnumerable<BaseInputCommand> GetKeyboadState(KeyboardState state)
+        public override IEnumerable<BaseInputCommand> GetKeyboardCommands(KeyboardState state)
         {
             var commands = new List<BaseInputCommand>();
 
