@@ -19,7 +19,7 @@ namespace Mastery.Engine.Objects
             set { _position = value; }
         }
 
-        public virtual void OnNotify(BaseGameStateEvents gameEvent) { }
+        public virtual void OnNotify(BaseGameStateEvent gameEvent) { }
 
         public virtual void Render(SpriteBatch spriteBatch)
         {

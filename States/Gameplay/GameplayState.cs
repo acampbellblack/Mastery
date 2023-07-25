@@ -65,7 +65,7 @@ namespace Mastery.States.Gameplay
             {
                 if (cmd is GameplayInputCommand.GameExit)
                 {
-                    NotifyEvent(new BaseGameStateEvents.GameQuit());
+                    NotifyEvent(new BaseGameStateEvent.GameQuit());
                 }
 
                 if (cmd is GameplayInputCommand.PlayerMoveLeft)

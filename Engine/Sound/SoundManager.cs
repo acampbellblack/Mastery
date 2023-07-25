@@ -17,7 +17,7 @@ namespace Mastery.Engine.Sound
             _soundtrackIndex = _soundtracks.Count - 1;
         }
 
-        public void OnNotify(BaseGameStateEvents gameEvent)
+        public void OnNotify(BaseGameStateEvent gameEvent)
         {
             if (_soundBank.TryGetValue(gameEvent.GetType(), out var sound))
             {
@@ -49,12 +49,12 @@ namespace Mastery.Engine.Sound
             }
         }
 
-        public void RegisterSound(BaseGameStateEvents gameEvent, SoundEffect sound)
+        public void RegisterSound(BaseGameStateEvent gameEvent, SoundEffect sound)
         {
             RegisterSound(gameEvent, sound, 1.0f, 0.0f, 0.0f);
         }
 
-        public void RegisterSound(BaseGameStateEvents gameEvent, SoundEffect sound, float volume, float pitch, float pan)
+        public void RegisterSound(BaseGameStateEvent gameEvent, SoundEffect sound, float volume, float pitch, float pan)
         {
             _soundBank.Add(gameEvent.GetType(), new SoundBankItem(sound, new SoundAttributes(volume, pitch, pan)));
         }

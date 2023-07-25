@@ -39,7 +39,7 @@ namespace Mastery.Engine.States
         public abstract void UpdateGameState(GameTime gameTime);
 
         public event EventHandler<BaseGameState> OnStateSwitched;
-        public event EventHandler<BaseGameStateEvents> OnEventNotification;
+        public event EventHandler<BaseGameStateEvent> OnEventNotification;
         protected abstract void SetInputManager();
 
         public void UnloadContent()
@@ -63,7 +63,7 @@ namespace Mastery.Engine.States
             return _contentManager.Load<SoundEffect>(soundName);
         }
 
-        protected void NotifyEvent(BaseGameStateEvents gameEvent)
+        protected void NotifyEvent(BaseGameStateEvent gameEvent)
         {
             OnEventNotification?.Invoke(this, gameEvent);
 

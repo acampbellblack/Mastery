@@ -33,7 +33,7 @@ namespace Mastery.States.Dev
             {
                 if (cmd is DevInputCommand.DevQuit)
                 {
-                    NotifyEvent(new BaseGameStateEvents.GameQuit());
+                    NotifyEvent(new BaseGameStateEvent.GameQuit());
                 }
 
                 if (cmd is DevInputCommand.DevShoot)

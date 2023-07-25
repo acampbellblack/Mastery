@@ -99,11 +99,11 @@ namespace Mastery.Engine
             _currentGameState.OnEventNotification += _currentGameState_OnEventNotification;
         }
 
-        private void _currentGameState_OnEventNotification(object sender, BaseGameStateEvents gameEvent)
+        private void _currentGameState_OnEventNotification(object sender, BaseGameStateEvent gameEvent)
         {
             switch (gameEvent)
             {
-                case BaseGameStateEvents.GameQuit _:
+                case BaseGameStateEvent.GameQuit _:
                     Exit();
                     break;
             }
