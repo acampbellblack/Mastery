@@ -6,7 +6,7 @@ namespace Mastery.Engine
 {
     public class MainGame : Game
     {
-        private BaseGameStateEvent _currentGameState;
+        private BaseGameState _currentGameState;
 
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
@@ -18,9 +18,9 @@ namespace Mastery.Engine
         private int _designedResolutionHeight;
         private float _designedResolutionAspectRatio;
 
-        private BaseGameStateEvent _firstGameState;
+        private BaseGameState _firstGameState;
 
-        public MainGame(int width, int height, BaseGameStateEvent firstGameState)
+        public MainGame(int width, int height, BaseGameState firstGameState)
         {
             Content.RootDirectory = "Content";
             _graphics = new GraphicsDeviceManager(this);
@@ -77,12 +77,12 @@ namespace Mastery.Engine
             SwitchGameState(_firstGameState);
         }
 
-        private void _currentGameState_OnStateSwitched(object sender, BaseGameStateEvent gameState)
+        private void _currentGameState_OnStateSwitched(object sender, BaseGameState gameState)
         {
             SwitchGameState(gameState);
         }
 
-        private void SwitchGameState(BaseGameStateEvent gameState)
+        private void SwitchGameState(BaseGameState gameState)
         {
             if (_currentGameState != null)
             {
@@ -99,11 +99,11 @@ namespace Mastery.Engine
             _currentGameState.OnEventNotification += _currentGameState_OnEventNotification;
         }
 
-        private void _currentGameState_OnEventNotification(object sender, BaseGameStateEvents gameEvent)
+        private void _currentGameState_OnEventNotification(object sender, BaseGameStateEvent gameEvent)
         {
             switch (gameEvent)
             {
-                case BaseGameStateEvents.GameQuit _:
+                case BaseGameStateEvent.GameQuit _:
                     Exit();
                     break;
             }

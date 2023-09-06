@@ -15,6 +15,9 @@ namespace Mastery.Engine.Particles
         private IEmitterType _emitterType;
         private int _nbParticleEmittedPerUpdate;
         private int _maxNbParticle;
+        private bool _active = true;
+
+        public int Age { get; set; }
 
         public Emitter(Texture2D texture, Vector2 position, EmitterParticleState particleState, IEmitterType emitterType, int nbParticleEmittedPerUpdate, int maxParticles)
         {
@@ -24,11 +27,15 @@ namespace Mastery.Engine.Particles
             _nbParticleEmittedPerUpdate = nbParticleEmittedPerUpdate;
             _maxNbParticle = maxParticles;
             Position = position;
+            Age = 0;
         }
 
         public void Update(GameTime gameTime)
         {
-            EmitParticles();
+            if (_active)
+            {
+                EmitParticles();
+            }
 
             var particleNode = _activeParticles.First;
             while (particleNode != null)
@@ -43,6 +50,8 @@ namespace Mastery.Engine.Particles
 
                 particleNode = nextNode;
             }
+
+            Age++;
         }
 
         public override void Render(SpriteBatch spriteBatch)
@@ -55,8 +64,14 @@ namespace Mastery.Engine.Particles
             }
         }
 
+        public void Deactivate()
+        {
+            _active = false;
+        }
+
         private void EmitParticles()
         {
+            // make sure we're not at max particles
             if (_activeParticles.Count >= _maxNbParticle)
             {
                 return;
@@ -65,6 +80,7 @@ namespace Mastery.Engine.Particles
             var maxAmountThatCanBeCreated = _maxNbParticle - _activeParticles.Count;
             var neededParticles = Math.Min(maxAmountThatCanBeCreated, _nbParticleEmittedPerUpdate);
 
+            // reuse inactive particles first before creating new ones
             var nbToReuse = Math.Min(_inactiveParticles.Count, neededParticles);
             var nbToCreate = neededParticles - nbToReuse;
 

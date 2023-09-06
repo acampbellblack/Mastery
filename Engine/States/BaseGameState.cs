@@ -11,11 +11,12 @@ using System.Linq;
 
 namespace Mastery.Engine.States
 {
-    public abstract class BaseGameStateEvent
+    public abstract class BaseGameState
     {
         private const string FallbackTexture = "Empty";
         private const string FallbackSong = "EmptySound";
 
+        protected bool _debug = true;
         private ContentManager _contentManager;
         protected int _viewportWidth;
         protected int _viewportHeight;
@@ -38,8 +39,8 @@ namespace Mastery.Engine.States
         public abstract void HandleInput(GameTime gameTime);
         public abstract void UpdateGameState(GameTime gameTime);
 
-        public event EventHandler<BaseGameStateEvent> OnStateSwitched;
-        public event EventHandler<BaseGameStateEvents> OnEventNotification;
+        public event EventHandler<BaseGameState> OnStateSwitched;
+        public event EventHandler<BaseGameStateEvent> OnEventNotification;
         protected abstract void SetInputManager();
 
         public void UnloadContent()
@@ -63,7 +64,7 @@ namespace Mastery.Engine.States
             return _contentManager.Load<SoundEffect>(soundName);
         }
 
-        protected void NotifyEvent(BaseGameStateEvents gameEvent)
+        protected void NotifyEvent(BaseGameStateEvent gameEvent)
         {
             OnEventNotification?.Invoke(this, gameEvent);
 
@@ -75,7 +76,7 @@ namespace Mastery.Engine.States
             _soundManager.OnNotify(gameEvent);
         }
 
-        protected void SwitchState(BaseGameStateEvent state)
+        protected void SwitchState(BaseGameState state)
         {
             OnStateSwitched?.Invoke(this, state);
         }
@@ -94,6 +95,11 @@ namespace Mastery.Engine.States
         {
             foreach (var gameObject in _gameObjects.OrderBy(a => a.zIndex))
             {
+                if (_debug)
+                {
+                    gameObject.RenderBoundingBoxes(spriteBatch);
+                }
+
                 gameObject.Render(spriteBatch);
             }
         }

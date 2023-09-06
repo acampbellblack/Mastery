@@ -18,6 +18,8 @@ namespace Mastery.Engine.Particles.EmitterTypes
 
         public Vector2 GetParticleDirection()
         {
+            if (Direction == default) return default;
+
             var angle = (float)Math.Atan2(Direction.Y, Direction.X);
             var newAngle = _rnd.NextRandom(angle - Spread / 2.0f, angle + Spread / 2.0f);
 

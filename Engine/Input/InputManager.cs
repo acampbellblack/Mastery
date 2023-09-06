@@ -27,7 +27,7 @@ namespace Mastery.Engine.Input
             }
 
             var gamePadState = GamePad.GetState(0);
-            foreach (var command in _inputMapper.GetGamepadState(gamePadState))
+            foreach (var command in _inputMapper.GetGamePadCommands(gamePadState))
             {
                 processCommand(command);
             }

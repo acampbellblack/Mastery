@@ -15,7 +15,7 @@ namespace Mastery.Engine.Input
             return new List<BaseInputCommand>();
         }
 
-        public virtual IEnumerable<BaseInputCommand> GetGamepadState(GamePadState state)
+        public virtual IEnumerable<BaseInputCommand> GetGamePadCommands(GamePadState state)
         {
             return new List<BaseInputCommand>();
         }

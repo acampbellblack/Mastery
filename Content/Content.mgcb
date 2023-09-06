@@ -55,7 +55,7 @@
 /processorParam:Quality=Best
 /build:bulletSound.wav
 
-#begin chopper-44x99.png
+#begin chopper.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -65,9 +65,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:chopper-44x99.png
+/build:chopper.png
 
-#begin Cloud001.png
+#begin Cloud.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -77,7 +77,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Cloud001.png
+/build:Cloud.png
 
 #begin Empty.png
 /importer:TextureImporter
@@ -169,7 +169,7 @@
 /processorParam:TextureFormat=Color
 /build:MG2.png
 
-#begin Missile05.png
+#begin Missile.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -179,7 +179,13 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Missile05.png
+/build:Missile.png
+
+#begin missileSound.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:missileSound.wav
 
 #begin splash.png
 /importer:TextureImporter

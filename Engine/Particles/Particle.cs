@@ -43,7 +43,7 @@ namespace Mastery.Engine.Particles
         public bool Update(GameTime gameTime)
         {
             _velocity *= _acceleration;
-            _direction *= _gravity;
+            _direction += _gravity;
 
             var positionDelta = _direction * _velocity;
 
